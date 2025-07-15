@@ -1,0 +1,56 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+.env.*  # If you're using multiple env files like .env.development
+
+# Coverage reports
+coverage/
+
+# Output of build tools
+dist/
+build/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Debugger settings
+*.swp
+
+# Optional npm cache
+.npm/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Parcel / Next.js / Nuxt build artifacts (if used)
+.next/
+.nuxt/
+out/
+
+# Optional: PM2 process logs
+pids/
+*.log
+
+# Optional: Temporary files
+tmp/
+temp/
