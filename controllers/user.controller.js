@@ -134,3 +134,44 @@ export const logout = (req, res) => {
     success: true,
   });
 };
+
+// Add this new controller method
+export const checkAuth = async (req, res) => {
+  try {
+    // Get token from cookies
+    const token = req.cookies.token;
+    
+    if (!token) {
+      return res.status(401).json({
+        authenticated: false,
+        message: "Not authenticated",
+      });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Optionally check if user still exists in DB
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(401).json({
+        authenticated: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      authenticated: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    return res.status(401).json({
+      authenticated: false,
+      message: "Invalid or expired token",
+    });
+  }
+};
