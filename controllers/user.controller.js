@@ -1,4 +1,6 @@
 import User from "../models/user.model.js";
+import "../models/subject.model.js"; 
+import "../models/schedule.model.js"; 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -135,3 +137,41 @@ export const logout = (req, res) => {
   });
 };
 
+
+export const getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findById(userId)
+      .populate("subjects")
+      .populate("schedule");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        preferences: user.preferences,
+        subjects: user.subjects,
+        schedule: user.schedule,
+        streak: user.streak,
+        totalTimeStudied: user.totalTimeStudied,
+        createdAt: user.createdAt,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    res.status(500).json({
+      message: "Server error.",
+      success: false,
+    });
+  }
+};
