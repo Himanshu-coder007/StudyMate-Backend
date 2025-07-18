@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, preferences } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -29,14 +29,17 @@ export const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      preferences: preferences || {
+        dailyStudyHours: 2, // default values
+        preferredStudyTime: "evening", // must be one of enum values
+        totalStudyGoalHours: 0,
+      },
     });
 
-    // Optional: generate JWT
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
-    // Optional: send token in cookie
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -51,6 +54,7 @@ export const register = async (req, res) => {
         id: newUser._id,
         name: newUser.name,
         email: newUser.email,
+        preferences: newUser.preferences, // included in response
       },
     });
   } catch (error) {
